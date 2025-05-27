@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Huella de Carbono Laboral</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #e5f3de;
+      margin: 0;
+      padding: 40px;
+    }
+
+    h2 {
+      color: #214c3e;
+      text-align: center;
+    }
+
+    .card {
+      background-color: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      padding: 25px;
+      margin: 20px auto;
+      max-width: 600px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #214c3e;
+      border-left: 4px solid #26a69a;
+      padding-left: 10px;
+    }
+
+    label {
+      display: flex;
+      justify-content: space-between;
+      margin: 10px 0;
+      font-size: 16px;
+    }
+
+    input[type="number"] {
+      width: 100px;
+      padding: 8px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #214c3e;
+    }
+
+    button {
+      display: block;
+      margin: 30px auto 0;
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #214c3e;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #214c3e;
+    }
+
+    #resultado {
+      text-align: center;
+      font-weight: bold;
+      margin-top: 20px;
+      font-size: 20px;
+      color: #000000;
+    }
+
+    .volver {
+      background-color: #214c3e;
+    }
+
+  </style>
+</head>
+<body>
+
+  <h2>Calculadora de Huella de Carbono Laboral</h2>
+
+  <form id="formulario">
+
+    <div class="card">
+      <div class="section-title">🔌 Dipositivos electrónicos</div>
+      <label>
+        - Cantidad de Computadores:
+        <input type="number" id="pcs" min="0">
+      </label>
+      <label>
+        - Cantidad de Monitores:
+        <input type="number" id="monitores" min="0">
+      </label>
+      <label>
+        - Cantidad de Teclados:
+        <input type="number" id="teclado" min="0">
+      </label>
+
+      <label>
+        - Cantidad de Mouse:
+        <input type="number" id="mouse" min="0">
+      </label>
+   
+      <label>
+        - Cantidad de Impresoras:
+        <input type="number" id="cim" min="0">
+      </label>
+ </div>
+    </div>
+
+
+    <div class="card">
+      <div class="section-title">💨Aire acondicionado o calefacción?</div>
+      <label>
+        - Cuantas veces por semana usa el calefactor:
+        <input type="number" id="calorsemana" min="0">
+      </label>
+      <label>
+        - Cuantas veces por semana el aire acondicionado:
+        <input type="number" id="airesemana" min="0">
+      </label>
+     
+      <label>
+        - Cuantas horas al día:
+        <input type="number" id="horad" min="0">
+      </label>
+    </div>
+
+    <div class="card">
+      <div class="section-title">🕒 Consumo diario</div>
+      <label>
+        - Horas frente al computador por día:
+        <input type="number" id="compuh" min="0">
+      </label>
+
+      <label>
+        - Cuantas horas al día usa la(s) impresora(s):
+        <input type="number" id="himpresora" min="0">
+      </label>
+
+
+      <label>
+        - Cantidad de bombillas o lamparas tiene en su espacio de trabajo:
+        <input type="number" id="bombi" min="0">
+      </label>
+
+      <label>
+        - Cuanto tiempo usa las bombillas o lamparas al día?:
+        <input type="number" id="bombih" min="0">
+      </label>
+</div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Realiza las siguientes actividades, si es así indique la cantidad de horas por semana , para los correos mencione un estimado diario</div>
+      <label>
+        - Correos enviados y recibidos:
+        <input type="number" id="correos" min="0">
+      </label>
+
+      <label>
+        - Horas de navegación en la web:
+        <input type="number" id="hweb" min="0">
+      </label>
+      <label>
+        - Subir fotos a alguna red social:
+        <input type="number" id="fotored" min="0">
+      </label>
+      <label>
+        - Ver videos:
+        <input type="number" id="videos" min="0">
+      </label>
+
+    </div>
+
+    <div class="card">
+      <div class="section-title">📄 Materiales</div>
+      <label>
+        - Páginas impresas por semana:
+        <input type="number" id="impresiones" min="0">
+      </label>
+    </div>
+
+<div class="card">
+  <div class="section-title">🛣️ Transporte</div>
+
+  <label for="veces-oficina">
+    - ¿Cuántas veces va a la oficina en un rango de 6 meses?:
+  </label><br>
+  <input type="number" id="vecesoficina" min="0"><br><br>
+
+  <p>- ¿Cuál de los siguientes transportes usa y cuántas horas cada día que va?:</p>
+
+  <label for="taxi">Taxi:</label>
+  <input type="number" id="taxi" min="0"><br>
+
+  <label for="bus">Bus:</label>
+  <input type="number" id="bus" min="0"><br>
+
+  <label for="transmilenio">Transmilenio:</label>
+  <input type="number" id="transmilenio" min="0"><br>
+
+  <label for="avion">Avión:</label>
+  <input type="number" id="avion" min="0"><br>
+
+  <label for="automovil">Automóvil:</label>
+  <input type="number" id="automovil" min="0"><br>
+
+  <label for="camioneta">Camioneta:</label>
+  <input type="number" id="camioneta" min="0"><br>
+</div>
+
+
+    <button type="button" onclick="calcularHuellaLaboral()">Calcular huella</button>
+  </form>
+
+  <div id="resultado"></div>
+
+  <button class="volver" onclick="location.href='Pagina.html'">← Volver a la página principal</button>
+
+  <script>
+    function calcularHuellaLaboral() {
+      const pcs = parseFloat(document.getElementById("pcs").value) || 0;
+      const cim = parseFloat(document.getElementById("cim").value) || 0;
+      const monitores = parseFloat(document.getElementById("monitores").value) || 0;
+      const teclado = parseFloat(document.getElementById("teclado").value) || 0;
+      const mouse = parseFloat(document.getElementById("mouse").value) || 0;
+      const calorsemana = parseFloat(document.getElementById("calorsemana").value) || 0;
+      const airesemana = parseFloat(document.getElementById("airesemana").value) || 0;
+      const horad = parseFloat(document.getElementById("horad").value) || 0;
+      const compuh = parseFloat(document.getElementById("compuh").value) || 0;
+      const impresiones = parseFloat(document.getElementById("impresiones").value) || 0;
+      const bombi = parseFloat(document.getElementById("bombi").value) || 0;
+      const bombih = parseFloat(document.getElementById("bombih").value) || 0;
+      const correos = parseFloat(document.getElementById("correos").value) || 0;
+      const hweb = parseFloat(document.getElementById("hweb").value) || 0;
+      const fotored = parseFloat(document.getElementById("fotored").value) || 0;
+      const videos = parseFloat(document.getElementById("videos").value) || 0;
+      const vecesoficina = parseFloat(document.getElementById("vecesoficina").value) || 0;
+      const taxi = parseFloat(document.getElementById("taxi").value) || 0;
+      const bus = parseFloat(document.getElementById("bus").value) || 0;
+      const transmilenio = parseFloat(document.getElementById("transmilenio").value) || 0;
+      const avion = parseFloat(document.getElementById("avion").value) || 0;
+      const automovil = parseFloat(document.getElementById("automovil").value) || 0;
+      const camioneta = parseFloat(document.getElementById("camioneta").value) || 0;
+      const himpresora = parseFloat(document.getElementById("himpresora").value) || 0;
+
+      // Factores de multiplicación
+      const router =0.008;
+      const compuho =compuh*22;
+      const inicial = (monitores*0.06) + (pcs * 0.050) + (teclado * 0.0017) + (mouse*0.001) + router; 
+      const energia = (inicial*compuho) +  (himpresora*cim*1.5) + (bombi*bombih*0.05);
+      const internet = ((correos*0.16) + (hweb*15) + (fotored*5) + (videos*4000))/1000;
+      const aire=((airesemana * 1.1) + (calorsemana * 1.8)) * horad * 4;
+      const energiam = ((energia)+aire);
+      const oficina= vecesoficina/6;
+      const combustible = ((taxi * 1.5) + (bus * 0.5) + (transmilenio * 0.3) + (avion * 5) + (automovil * 2) + (camioneta * 3)) * oficina;
+      const huella= (energiam*0.175)+(impresiones * 0.0045)+(internet*0.01)+ (combustible);
+      
+
+      document.getElementById("resultado").innerText =
+        `Tu huella mensual laboral estimada es de ${huella.toFixed(2)} kg CO₂e.`;
+    	`Tu consumo energético mensual laboral estimada es de ${energiam.toFixed(2)} kWh`;
+    }
+  </script>
+
+</body>
+</html>

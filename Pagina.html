@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Calculadora de Huella de Carbono</title>
+<img src="C:\Users\jlvargas\OneDrive - Neosecure\Documentos\huellla de carbono\Huella.png" alt="Huella de Carbono" style="max-width: 650px; margin-top: 65px;">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #e5f3de;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    h1 {
+      color: #2e7d32;
+    }
+    .button-container {
+      display: flex;
+      gap: 20px;
+      margin-top: 30px;
+    }
+    .carbon-button {
+      padding: 15px 30px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .carbon-button:hover {
+      background-color: #388e3c;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Calculadora de Huella de Carbono</h1>
+  <p>Selecciona una opción para comenzar:</p>
+
+  <div class="button-container">
+    <button class="carbon-button" onclick="location.href='huella_personal.html'">Huella de Carbono Personal</button>
+    <button class="carbon-button" onclick="location.href='huella_laboral.html'">Huella en Horario Laboral</button>
+  </div>
+
+</body>
+</html>
