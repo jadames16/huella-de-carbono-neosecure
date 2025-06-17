@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calculadora e Informe de Huella de Carbono</title>
+  <link rel="icon" href="sek.png" type="image/png">
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-grotesk@400,500,600&display=swap" rel="stylesheet">
+  <!-- Firebase App (core) -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <!-- Firestore (base de datos) -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+  <script src="basedatos.js" type="text/javascript"></script>
+  <style>
+    body {
+      font-family: 'Clash Grotesk', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #e5f3de;
+      color: #333;
+      margin: 0;
+      padding: 20px;
+      line-height: 1.6;
+    }
+
+    h1, h2 {
+      color: #214c3e;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+    }
+
+    h2 {
+      margin-top: 30px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #26a69a;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      background-color: #fff;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #e0f2f1;
+      font-weight: bold;
+    }
+
+    .card {
+      background-color: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      padding: 25px;
+      margin: 20px auto;
+      max-width: 600px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #214c3e;
+      border-left: 4px solid #26a69a;
+      padding-left: 10px;
+    }
+
+    label {
+      display: flex;
+      justify-content: space-between;
+      margin: 10px 0;
+      font-size: 16px;
+      align-items: center;
+    }
+
+    input[type="number"], input[type="text"] {
+      width: 100px;
+      padding: 8px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #214c3e;
+    }
+
+    input[type="text"] {
+      width: 300px;
+    }
+
+    button {
+      display: block;
+      margin: 30px auto;
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #00796b;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #004d40;
+    }
+
+    .volver {
+      background-color: #214c3e;
+    }
+
+    .btn-pdf {
+      background-color: #d32f2f;
+    }
+
+    .btn-pdf:hover {
+      background-color: #b71c1c;
+    }
+
+    #resultado {
+      text-align: center;
+      font-weight: bold;
+      margin-top: 30px;
+      font-size: 18px;
+      color: #000000;
+      white-space: pre-wrap;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    #informe-container {
+      display: none;
+      max-width: 800px;
+      margin: 40px auto;
+      background-color: white;
+      padding: 40px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      border-radius: 10px;
+    }
+
+.logo {
+    max-width: 150px;
+    height: auto;
+    margin-bottom: 20px;
+}
+.header-informe {
+    text-align: left;
+    margin-bottom: 30px;
+}
+
+    .header-content {
+      margin-left: 160px; /* Espacio para el logo */
+    }
+
+    .btn-container {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 30px;
+      flex-wrap: wrap;
+    }
+
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #informe-container, #informe-container * {
+        visibility: visible;
+      }
+      #informe-container {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        box-shadow: none;
+      }
+      .no-print {
+        display: none;
+      }
+    .pdf-content {
+      width: 100%;
+      height: 100%;
+      padding: 20px;
+      background-color: white;
+    }
+    .hidden-for-pdf {
+      display: none;
+    }
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+
+  <h1>Informe de Huella de Carbono – Nivel Individual</h1>
+
+  <form id="formulario">
+    <div class="card">
+      <label for="nombre">Nombre del colaborador/a:</label><br>
+      <input type="text" id="nombre" placeholder="Ej. Johanna Pérez" />
+    </div>
+
+    <div class="card">
+      <label for="cargo">Cargo:</label><br>
+      <input type="text" id="cargo" placeholder="Ej. Analista de Ciberseguridad" />
+    </div>
+    
+ <div class="card">
+      <div class="section-title">🔌 Dipositivos electrónicos</div>
+      <label>
+        - Cantidad de Computadores:
+        <input type="number" id="pcs" min="0">
+      </label>
+      <label>
+        - Cantidad de Monitores:
+        <input type="number" id="monitores" min="0">
+      </label>
+      <label>
+        - Cantidad de Teclados:
+        <input type="number" id="teclado" min="0">
+      </label>
+
+      <label>
+        - Cantidad de Mouse:
+        <input type="number" id="mouse" min="0">
+      </label>
+   
+      <label>
+        - Cantidad de Impresoras:
+        <input type="number" id="cim" min="0">
+      </label>
+ </div>
+    </div>
+
+
+    <div class="card">
+      <div class="section-title">💨Aire acondicionado o calefacción?</div>
+      <label>
+        - Cuantas veces por semana usa el calefactor:
+        <input type="number" id="calorsemana" min="0">
+      </label>
+      <label>
+        - Cuantas veces por semana el aire acondicionado:
+        <input type="number" id="airesemana" min="0">
+      </label>
+     
+      <label>
+        - Cuantas horas al día:
+        <input type="number" id="horad" min="0">
+      </label>
+    </div>
+
+    <div class="card">
+      <div class="section-title">🕒 Consumo diario</div>
+      <label>
+        - Horas frente al computador por día:
+        <input type="number" id="compuh" min="0">
+      </label>
+
+      <label>
+        - Cuantas horas al día usa la(s) impresora(s):
+        <input type="number" id="himpresora" min="0">
+      </label>
+
+
+      <label>
+        - Cantidad de bombillas o lamparas tiene en su espacio de trabajo:
+        <input type="number" id="bombi" min="0">
+      </label>
+
+      <label>
+        - Cuanto tiempo usa las bombillas o lamparas al día?:
+        <input type="number" id="bombih" min="0">
+      </label>
+</div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Realiza las siguientes actividades, si es así indique la cantidad de horas por semana , para los correos mencione un estimado diario</div>
+      <label>
+        - Correos enviados y recibidos:
+        <input type="number" id="correos" min="0">
+      </label>
+
+      <label>
+        - Horas de navegación en la web:
+        <input type="number" id="hweb" min="0">
+      </label>
+      <label>
+        - Subir fotos a alguna red social:
+        <input type="number" id="fotored" min="0">
+      </label>
+      <label>
+        - Ver videos:
+        <input type="number" id="videos" min="0">
+      </label>
+
+    </div>
+
+    <div class="card">
+      <div class="section-title">📄 Materiales</div>
+      <label>
+        - Páginas impresas por día:
+        <input type="number" id="impresiones" min="0">
+      </label>
+    </div>
+
+<div class="card">
+  <div class="section-title">🛣️ Transporte</div>
+
+  <label for="veces-oficina">
+    - ¿Cuántas veces va a la oficina en un rango de 6 meses?:
+  </label><br>
+  <input type="number" id="vecesoficina" min="0"><br><br>
+
+  <p>- ¿Cuál de los siguientes transportes usa y cuantos kilómetros cada día que va?:</p>
+
+  <label for="taxi">Taxi:</label>
+  <input type="number" id="taxi" min="0"><br>
+
+  <label for="bus">Bus:</label>
+  <input type="number" id="bus" min="0"><br>
+
+  <label for="transmilenio">Transmilenio:</label>
+  <input type="number" id="transmilenio" min="0"><br>
+
+  <label for="avion">Avión:</label>
+  <input type="number" id="avion" min="0"><br>
+
+  <label for="automovil">Automóvil:</label>
+  <input type="number" id="automovil" min="0"><br>
+
+  <label for="camioneta">Camioneta:</label>
+  <input type="number" id="camioneta" min="0"><br>
+
+  <label for="moto">Moto:</label>
+  <input type="number" id="moto" min="0"><br>
+
+  <label for="metro">Metro:</label>
+  <input type="number" id="metro" min="0"><br>
+
+</div>
+</div>
+
+    
+    <button type="button" onclick="CalcularHuellaLaboral()">Calcular huella</button>
+  </form>
+
+  <div id="resultado"></div>
+
+<div class="btn-container">
+    <button type="button" onclick="generarInforme()">Generar Informe</button>
+    <button class="btn-pdf" onclick="generarPDF()">Descargar PDF</button>
+    <button class="volver" onclick="location.href='index.html'">← Volver</button>
+</div>
+
+  <div id="informe-container" class="hidden-for-pdf">
+    <div id="pdf-content" class="pdf-content">
+      <div id="informe"></div>
+    </div>
+  </div>
+
+ <script>
+ // Objeto para almacenar todos los datos de cálculo
+const huellaData = {
+    energiam: 0,
+    internet: 0,
+    aire: 0,
+    combustible: 0,
+    huella: 0,
+    // Variables adicionales para cálculos intermedios
+    energia: 0,
+    inicial: 0,
+    oficina: 0
+};
+
+function CalcularHuellaLaboral() {
+    // Obtener valores de los inputs
+    const pcs = parseFloat(document.getElementById("pcs").value) || 0;
+    const cim = parseFloat(document.getElementById("cim").value) || 0;
+    const monitores = parseFloat(document.getElementById("monitores").value) || 0;
+    const teclado = parseFloat(document.getElementById("teclado").value) || 0;
+    const mouse = parseFloat(document.getElementById("mouse").value) || 0;
+    const calorsemana = parseFloat(document.getElementById("calorsemana").value) || 0;
+    const airesemana = parseFloat(document.getElementById("airesemana").value) || 0;
+    const horad = parseFloat(document.getElementById("horad").value) || 0;
+    const compuh = parseFloat(document.getElementById("compuh").value) || 0;
+    const impresiones = parseFloat(document.getElementById("impresiones").value) || 0;
+    const bombi = parseFloat(document.getElementById("bombi").value) || 0;
+    const bombih = parseFloat(document.getElementById("bombih").value) || 0;
+    const correos = parseFloat(document.getElementById("correos").value) || 0;
+    const hweb = parseFloat(document.getElementById("hweb").value) || 0;
+    const fotored = parseFloat(document.getElementById("fotored").value) || 0;
+    const videos = parseFloat(document.getElementById("videos").value) || 0;
+    const vecesoficina = parseFloat(document.getElementById("vecesoficina").value) || 0;
+    const taxi = parseFloat(document.getElementById("taxi").value) || 0;
+    const bus = parseFloat(document.getElementById("bus").value) || 0;
+    const transmilenio = parseFloat(document.getElementById("transmilenio").value) || 0;
+    const avion = parseFloat(document.getElementById("avion").value) || 0;
+    const automovil = parseFloat(document.getElementById("automovil").value) || 0;
+    const camioneta = parseFloat(document.getElementById("camioneta").value) || 0;
+    const himpresora = parseFloat(document.getElementById("himpresora").value) || 0;
+    const moto = parseFloat(document.getElementById("moto").value) || 0;
+    const metro = parseFloat(document.getElementById("metro").value) || 0;
+
+    // Factores de multiplicación
+    const router = 0.008;
+    const compuho = compuh * 22;
+    
+    // Cálculos intermedios
+    huellaData.inicial = (monitores * 0.06) + (pcs * 0.050) + (teclado * 0.0017) + (mouse * 0.001) + router; 
+    huellaData.energia = (huellaData.inicial * compuho) + (himpresora * cim * 1.5) + (bombi * bombih * 0.05);
+    huellaData.internet = ((correos * 0.16) + (hweb * 15) + (fotored * 5) + (videos * 4000)) / 1000;
+    huellaData.aire = ((airesemana * 1.1) + (calorsemana * 1.8)) * horad * 4;
+    huellaData.energiam = (huellaData.energia) + huellaData.aire;
+    huellaData.oficina = vecesoficina / 6;
+    huellaData.combustible = ((taxi * 0.25) + (bus * 0.5) + (transmilenio * 0.05) + (avion * 0.2) + (automovil * 0.22) + (camioneta * 0.3) + (moto*0.085) + (metro*0.03)) * huellaData.oficina;
+    huellaData.huella = (huellaData.energiam * 0.175) + (impresiones * 0.0045) + (huellaData.internet * 0.01) + (huellaData.combustible);
+
+    // Mostrar resultados
+    document.getElementById("resultado").innerHTML = `
+        Tu huella mensual laboral estimada es de ${huellaData.huella.toFixed(2)} kg CO₂e<br>
+        Tu consumo energético mensual laboral es de ${huellaData.energiam.toFixed(2)} kWh.
+    `;
+    
+    console.log("Datos calculados:", huellaData);
+}
+
+function generarInforme() {
+    const nombre = document.getElementById("nombre").value;
+    const cargo = document.getElementById("cargo").value;
+
+    if (!nombre || !cargo) {
+        alert("Por favor completa tu nombre y cargo.");
+        return;
+    }
+
+    if (huellaData.huella === 0) {
+        alert("Por favor primero calcula tu huella de carbono antes de generar el informe.");
+        return;
+    }
+
+    const fechaActual = new Date();
+    const fechaFormateada = fechaActual.toLocaleDateString('es-ES', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+
+    const informeHTML = `
+        <div class="header-informe">
+            <img src="1.png" alt="Logo Neosecure" class="logo" onerror="this.style.display='none'">
+            <div class="header-content">
+                <h2>INFORME DE HUELLA DE CARBONO</h2>
+            </div>
+        </div>
+
+        <div class="datos-colaborador">
+            <p><strong>Nombre del colaborador/a:</strong> ${nombre}</p>
+            <p><strong>Cargo:</strong> ${cargo}</p>
+            <p><strong>Modalidad:</strong> Teletrabajo autónomo</p>
+            <p><strong>Año de referencia:</strong> 2025</p>
+            <p><strong>Fecha de emisión:</strong> ${fechaFormateada}</p>
+        </div>
+
+        <section>
+            <h2>1. Introducción</h2>
+            <p>Este informe presenta la estimación de la huella de carbono generada por las actividades laborales individuales de <strong>${nombre}</strong> durante el año 2024, bajo el esquema de trabajo remoto. La huella de carbono es un indicador ambiental que refleja la totalidad de gases de efecto invernadero emitidos por efecto directo o indirecto de un individuo.</p>
+        </section>
+
+        <section>
+            <h2>2. Resultados de emisiones individuales</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fuente de Emisión</th>
+                        <th>Alcance</th>
+                        <th>Emisiones (KgCO₂e)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Consumo eléctrico</td>
+                        <td>Alcance 2</td>
+                        <td>${huellaData.energiam.toFixed(2)}</td>
+                    </tr>
+                    <tr>
+                        <td>Internet y servicios digitales</td>
+                        <td>Alcance 3</td>
+                        <td>${huellaData.internet.toFixed(2)}</td>
+                    </tr>
+                    <tr>
+                        <td>Climatización (aire/calefacción)</td>
+                        <td>Alcance 3</td>
+                        <td>${huellaData.aire.toFixed(2)}</td>
+                    </tr>
+                    <tr>
+                        <td>Transporte</td>
+                        <td>Alcance 3</td>
+                        <td>${huellaData.combustible.toFixed(2)}</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2">Total huella mensual</th>
+                        <th>${huellaData.huella.toFixed(2)} KgCO₂e</th>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h2>3. Análisis comparativo</h2>
+            <p>El promedio de huella de carbono mensual para trabajadores remotos en Colombia es de aproximadamente 50 kg CO₂e. Su huella de <strong>${huellaData.huella.toFixed(2)} kg CO₂e</strong> se considera ${huellaData.huella > 50 ? 'superior' : 'inferior'} al promedio nacional. Además cuenta con un consumo eléctrico mensual de <strong>${huellaData.energiam.toFixed(2)} Kwh</strong></p>
+        </section>
+
+        <section>
+            <h2>4. Recomendaciones</h2>
+            <ul>
+                <li><strong>Optimización energética:</strong> Desconectar dispositivos en desuso y utilizar equipos con certificación energética.</li>
+                <li><strong>Climatización inteligente:</strong> Regular la temperatura entre 22-24°C y usar cortinas para controlar la temperatura natural.</li>
+                <li><strong>Gestión digital:</strong> Limpiar regularmente el correo electrónico y reducir el almacenamiento en la nube innecesario.</li>
+                <li><strong>Transporte sostenible:</strong> Considerar opciones de transporte público o compartido cuando visite la oficina.</li>
+                <li><strong>Compensación:</strong> Participar en programas de compensación de carbono mediante reforestación.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>5. Conclusión</h2>
+            <p>${nombre} presenta una huella de carbono ${huellaData.huella > 50 ? 'ligeramente superior' : 'por debajo'} al promedio nacional para trabajadores remotos. Existen oportunidades claras para reducir aún más su impacto ambiental mediante la implementación de las recomendaciones señaladas en este informe.</p>
+            <p>La empresa Neosecure Colombia S.A.S. se compromete con la sostenibilidad ambiental y agradece su participación en este programa de medición de huella de carbono.</p>
+        </section>
+    `;
+
+    const divInforme = document.getElementById("informe");
+    divInforme.innerHTML = informeHTML;
+    document.getElementById("informe-container").style.display = "block";
+
+    
+    // Llamar a la función para generar el PDF automáticamente
+    setTimeout(generarPDF, 300);
+
+}
+
+function generarPDF() {
+    const element = document.getElementById("pdf-content");
+    
+    const opt = {
+        margin: 10,
+        filename: `Huella_Carbono_${document.getElementById("nombre").value || 'colaborador'}.pdf`,
+
+            image: { 
+                type: 'jpeg', 
+                quality: 0.98,
+                async: true,
+                cacheBust: true
+            },
+
+        html2canvas: { 
+            scale: 2,
+            useCORS: true,
+            allowTaint: true,
+            scrollX: 0,
+            scrollY: 0
+        },
+        jsPDF: { 
+            unit: 'mm', 
+            format: 'carta', 
+            orientation: 'portrait',
+           
+        },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+    };
+
+        document.getElementById("informe-container").style.display = "block";
+        
+        html2pdf().set(opt).from(element).save().then(() => {
+            document.getElementById("informe-container").style.display = "none";
+        });
+}
+
+function cerrarInforme() {
+    document.getElementById("informe-container").style.display = "none";
+    document.getElementById("informe").innerHTML = "";
+}
+  </script>
+</body>
+</html>
