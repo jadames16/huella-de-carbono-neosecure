@@ -23,6 +23,7 @@ async function guardarEnFirebase() {
   // Validar campos obligatorios
   const nombre = document.getElementById("nombre").value;
   const cargo = document.getElementById("cargo").value;
+  const correo = document.getElementById("correo").value;
   if (!nombre || !cargo) {
     alert("⚠️ Nombre y cargo son obligatorios");
     return;
